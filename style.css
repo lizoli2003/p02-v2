@@ -17,6 +17,7 @@ html, body {
     /* On utilise min-height et min-width pour forcer la couverture */
     width: 100vw; 
     height: 100dvh; /* dvh est parfait pour mobile */
+    gap: 3rem; /* Cela crée un espace fixe entre le titre et l'instruction */
     
     background: white;
     color: rgb(225, 225, 225);
@@ -48,6 +49,7 @@ html, body {
 
 .image {
     position: absolute;
+    z-index: 1;
     object-fit: cover;
     user-select: none;
     pointer-events: none;
@@ -55,6 +57,7 @@ html, body {
 
 .text {
     position: absolute;
+    z-index: 10;
     color: rgb(200, 200, 200);
     font-size: 1.2rem;
     font-family: "ExposureTrial"; 
@@ -66,12 +69,27 @@ html, body {
     line-height: 1.4;
 }
 
+.instruction {
+    text-align: center;
+    margin: 0 auto; /* Pour bien centrer le bloc de texte */
+    line-height: 1.4; /* Ajoute un peu d'espace entre les deux lignes */
+}
+
+.box-text {
+    display: inline-block; /* Pour que l'encadré ne prenne pas toute la largeur */
+    padding: 8px 20px;     /* Espace intérieur : haut/bas et gauche/droite */
+    border: 1px solid rgb(225, 225, 225); /* Couleur du trait (assortie à ton texte) */
+    border-radius: 20px;    /* Coins légèrement arrondis */
+    font-size: 0.9rem;     /* Un peu plus petit pour un look élégant */
+    margin-top: 20px;
+}
+
 #end-message {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Ajouté pour centrer parfaitement */
-    font-family: "ExposureTrial";
+    font-family: "ExposureTrial", sans-serif;
     opacity: 0;
     color: rgb(200, 200, 200);
     transition: opacity 1.5s ease;
@@ -115,7 +133,7 @@ html, body {
         font-size: 1.5rem;
         width: 80%;
         text-align: center;
-        font-family: "ExposureTrial"; 
+        font-family: "ExposureTrial", sans-serif; 
     }
 
     /* On réduit un peu la taille des images via le JS normalement, 
