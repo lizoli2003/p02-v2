@@ -5,30 +5,33 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Important pour éviter le scroll natif */
-    background: rgb(255, 255, 255);
-    cursor: grab;
-    font-family: "ExposureTrial";
-    touch-action: none; /* Désactive le zoom/pan natif pour laisser le JS gérer */
+    /* Empêche tout mouvement parasite derrière l'écran blanc */
+    overflow: hidden; 
+    position: fixed; 
 }
 
 #home {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    /* On utilise min-height et min-width pour forcer la couverture */
+    width: 100vw; 
+    height: 100dvh; /* dvh est parfait pour mobile */
+    
     background: white;
     color: rgb(225, 225, 225);
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 100; /* Augmenté pour être sûr de couvrir le reste */
+
+    z-index: 100; /* Assure-toi qu'il est au-dessus de tout */
     cursor: pointer;
     transition: opacity 0.8s ease;
-    text-align: center;
-    padding: 20px;
+    
+    /* Sécurité pour les vieux mobiles */
+    min-height: -webkit-fill-available; 
 }
 
 #home.hidden {
