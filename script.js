@@ -1,4 +1,4 @@
-const experienceDuration = 15000;
+const experienceDuration = 150000;
 const endMessage = document.getElementById("end-message");
 const home = document.getElementById("home");
 
@@ -109,60 +109,50 @@ texts.forEach(text => {
     canvas.appendChild(div);
 });
 
-// Drag
+// Gestion du Drag (Souris + Tactile)
 let isDragging = false;
 let startX, startY;
 let offsetX = 0, offsetY = 0;
 
-const screenW = window.innerWidth;
-const screenH = window.innerHeight;
-
-const edgeIndicators = {
-  top: createEdgeIndicator('top'),
-  bottom: createEdgeIndicator('bottom'),
-  left: createEdgeIndicator('left'),
-  right: createEdgeIndicator('right'),
-};
-
-function createEdgeIndicator(side) {
-  const el = document.createElement('div');
-  el.className = `edge-indicator edge-${side}`;
-  el.innerHTML = 'ne part pas!';
-  document.body.appendChild(el);
-  return el;
-}
-
-function updateEdgeIndicators() {
-  const canvasW = canvas.offsetWidth;
-  const canvasH = canvas.offsetHeight;
-
-  const canGoUp    = offsetY < 0;
-  const canGoDown  = offsetY > -(canvasH - screenH);
-  const canGoLeft  = offsetX < 0;
-  const canGoRight = offsetX > -(canvasW - screenW);
-
-  edgeIndicators.top.classList.toggle('visible',    !canGoUp);
-  edgeIndicators.bottom.classList.toggle('visible', !canGoDown);
-  edgeIndicators.left.classList.toggle('visible',   !canGoLeft);
-  edgeIndicators.right.classList.toggle('visible',  !canGoRight);
-}
-
-document.addEventListener("mousedown", (e) => {
+// Fonctions de début, mouvement et fin
+function startDrag(e) {
   isDragging = true;
-  startX = e.clientX - offsetX;
-  startY = e.clientY - offsetY;
+  // On récupère les coordonnées soit de la souris, soit du premier doigt
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+  
+  startX = clientX - offsetX;
+  startY = clientY - offsetY;
   document.body.style.cursor = "grabbing";
-});
+}
 
-document.addEventListener("mouseup", () => {
+function stopDrag() {
   isDragging = false;
   document.body.style.cursor = "grab";
-});
+}
 
-document.addEventListener("mousemove", (e) => {
+function moveDrag(e) {
   if (!isDragging) return;
-  offsetX = e.clientX - startX;
-  offsetY = e.clientY - startY;
+  
+  // Empêche le défilement de la page pendant qu'on bouge le canvas
+  if (e.touches) e.preventDefault(); 
+
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+  offsetX = clientX - startX;
+  offsetY = clientY - startY;
+  
   canvas.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
   updateEdgeIndicators();
-});
+}
+
+// Listeners Souris
+document.addEventListener("mousedown", startDrag);
+document.addEventListener("mouseup", stopDrag);
+document.addEventListener("mousemove", moveDrag);
+
+// Listeners Tactile (Mobile)
+document.addEventListener("touchstart", startDrag, { passive: false });
+document.addEventListener("touchend", stopDrag);
+document.addEventListener("touchmove", moveDrag, { passive: false });
