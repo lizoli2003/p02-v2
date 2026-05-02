@@ -1,52 +1,46 @@
+/* --- BASE (Inchangé ou optimisé) --- */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Important pour éviter le scroll natif */
+    background: rgb(255, 255, 255);
+    cursor: grab;
+    font-family: "ExposureTrial";
+    touch-action: none; /* Désactive le zoom/pan natif pour laisser le JS gérer */
+}
+
 #home {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-
     background: white;
     color: rgb(225, 225, 225);
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    z-index: 10;
+    z-index: 100; /* Augmenté pour être sûr de couvrir le reste */
     cursor: pointer;
     transition: opacity 0.8s ease;
+    text-align: center;
+    padding: 20px;
 }
 
 #home.hidden {
     opacity: 0;
     pointer-events: none;
-    display: none;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: rgb(255, 255, 255);
-    cursor: grab;
-    font-family: "ExposureTrial";
-}
-
-#title {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: rgb(242, 242, 242);
-    transition: opacity 2s ease;
-    font-family: "ExposureTrial";
 }
 
 #canvas {
     position: absolute;
     width: 5000px;
     height: 5000px;
+    will-change: transform; /* Optimise la fluidité du drag sur mobile */
 }
 
 .image {
@@ -59,56 +53,76 @@ html, body {
 .text {
     position: absolute;
     color: rgb(200, 200, 200);
-    font-size: 14px;
-    font-family: "ExposureTrial";
-    white-space: nowrap;
+    font-size: 1.2rem;
+    font-family: "ExposureTrial"; 
+    white-space: normal; /* Changé de nowrap à normal pour mobile */
     pointer-events: none;
+    max-width: 300px; /* Limite la largeur pour éviter les lignes trop longues */
     user-select: none;
     opacity: 0.8;
-}
-
-.image, .text, #title {
-    transition: opacity 2s ease;
-}
-
-.fade-out {
-    opacity: 0;
-    transition: opacity 1s ease;
+    line-height: 1.4;
 }
 
 #end-message {
-    opacity: 0;
-    color: rgb(200, 200, 200);
+    position: fixed;
     top: 50%;
     left: 50%;
+    transform: translate(-50%, -50%); /* Ajouté pour centrer parfaitement */
+    font-family: "ExposureTrial", sans-serif;
+    opacity: 0;
+    color: rgb(200, 200, 200);
     transition: opacity 1.5s ease;
-    position: fixed;
     z-index: 9999;
+    text-align: center;
+    width: 80%;
 }
 
 #end-message.visible {
     opacity: 1;
 }
 
+/* --- INDICATEURS DE BORD --- */
 .edge-indicator {
     position: fixed;
     z-index: 9999;
-    color: rgb(239, 239, 239);
-    font-size: 12px;
+    color: rgb(200, 200, 200); /* Un peu plus sombre pour lisibilité */
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    text-transform: uppercase;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s ease;
-    border-radius: 6px;
-    padding: 5px 12px;
+    padding: 5px;
 }
 
 .edge-indicator.visible {
     opacity: 1;
 }
 
-.edge-top    { top: 8px; left: 50%; transform: translateX(-50%); }
-.edge-bottom { bottom: 8px; left: 50%; transform: translateX(-50%); }
-.edge-left   { left: 8px; top: 50%; transform: translateY(-50%); }
-.edge-right  { right: 8px; top: 50%; transform: translateY(-50%); }  
+/* --- ADAPTATION MOBILE (MEDIA QUERIES) --- */
+
+@media (max-width: 768px) {
+    .text {
+        font-size: 1rem; /* Texte un peu plus petit sur mobile */
+        max-width: 70vw; /* Utilise la largeur de l'écran */
+        white-space: normal;
+    }
+
+    #title {
+        font-size: 1.5rem;
+        width: 80%;
+        text-align: center;
+        font-family: "ExposureTrial", sans-serif; 
+    }
+
+    /* On réduit un peu la taille des images via le JS normalement, 
+       mais on assure ici qu'elles ne s'affichent pas bizarrement */
+    .image {
+        max-width: 60vw; 
+        height: auto !important;
+    }
+
+    .edge-indicator {
+        font-size: 9px;
+    }
+}
